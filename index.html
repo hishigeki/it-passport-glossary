@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ITパスポート 漢字用語辞典 | DX学科</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B0F14;
+    --bg-2:#111826;
+    --panel:#151C2A;
+    --panel-2:#1B2434;
+    --line:#26314A;
+    --ink:#E7ECF3;
+    --muted:#8996AC;
+    --paper:#F2EEE2;
+    --paper-ink:#20263A;
+    --paper-line:#C9C2AC;
+    --teal:#2FD8B8;
+    --teal-dim:rgba(47,216,184,0.16);
+    --amber:#F5B942;
+    --amber-dim:rgba(245,185,66,0.18);
+    --radius:14px;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    --serif:'Noto Serif JP',serif;
+    --sans:'Noto Sans JP',sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(circle at 12% -10%, rgba(47,216,184,0.10), transparent 45%),
+      radial-gradient(circle at 100% 0%, rgba(245,185,66,0.08), transparent 40%),
+      var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+
+  /* ---------- Header ---------- */
+  header{
+    padding:34px 20px 22px;
+    max-width:980px;
+    margin:0 auto;
+    position:relative;
+  }
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:.18em;
+    color:var(--teal);
+    text-transform:uppercase;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:22px;height:1px;background:var(--teal);
+    display:inline-block;
+  }
+  h1{
+    font-family:var(--serif);
+    font-weight:900;
+    font-size:clamp(28px,5.4vw,44px);
+    line-height:1.25;
+    margin:10px 0 8px;
+    letter-spacing:.01em;
+  }
+  h1 .kanji-accent{
+    background:linear-gradient(120deg,var(--teal),var(--amber));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  .lede{
+    color:var(--muted);
+    font-size:14px;
+    line-height:1.9;
+    max-width:60ch;
+  }
+  .stat-strip{
+    display:flex;
+    gap:18px;
+    margin-top:18px;
+    flex-wrap:wrap;
+  }
+  .stat{
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--muted);
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:6px 14px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .stat b{color:var(--ink);font-size:14px;}
+  .stat .dot{width:6px;height:6px;border-radius:50%;background:var(--teal);}
+
+  /* ---------- Mode tabs ---------- */
+  .shell{max-width:980px;margin:0 auto;padding:0 20px 70px;}
+  .tabs{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin:26px 0 22px;
+  }
+  .tab{
+    font-family:var(--sans);
+    font-weight:700;
+    font-size:15px;
+    padding:16px 18px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    cursor:pointer;
+    color:var(--muted);
+    text-align:left;
+    transition:border-color .15s, color .15s, background .15s;
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+  }
+  .tab span.sub{font-family:var(--mono);font-weight:400;font-size:11px;color:var(--muted);letter-spacing:.04em;}
+  .tab.active{
+    color:var(--ink);
+    border-color:var(--teal);
+    background:linear-gradient(180deg, var(--teal-dim), transparent 60%), var(--panel);
+  }
+  .tab.active span.sub{color:var(--teal);}
+  .tab:focus-visible{outline:2px solid var(--teal);outline-offset:2px;}
+
+  /* ---------- Breadcrumb / back ---------- */
+  .crumbbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:14px;
+    min-height:34px;
+  }
+  .crumbs{
+    font-family:var(--mono);
+    font-size:13px;
+    color:var(--muted);
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .crumbs .seg{
+    cursor:pointer;
+    color:var(--teal);
+    padding:2px 4px;
+  }
+  .crumbs .seg:hover{text-decoration:underline;}
+  .crumbs .sep{color:var(--line);}
+  .backbtn{
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--ink);
+    background:var(--panel-2);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:8px 12px;
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  .backbtn:hover{border-color:var(--teal);}
+
+  /* ---------- Bucket / kana grid ---------- */
+  .grid-buttons{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(84px,1fr));
+    gap:10px;
+  }
+  .bucket-btn{
+    position:relative;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:14px 8px 10px;
+    cursor:pointer;
+    text-align:center;
+    color:var(--ink);
+    transition:transform .12s, border-color .12s, background .12s;
+  }
+  .bucket-btn:hover{border-color:var(--teal);transform:translateY(-2px);}
+  .bucket-btn:focus-visible{outline:2px solid var(--teal);outline-offset:2px;}
+  .bucket-btn .main{
+    font-family:var(--serif);
+    font-weight:700;
+    font-size:20px;
+    display:block;
+  }
+  .bucket-btn.kana .main{font-family:var(--sans);font-size:22px;}
+  .bucket-btn .count{
+    font-family:var(--mono);
+    font-size:10px;
+    color:var(--muted);
+    display:block;
+    margin-top:4px;
+  }
+  .bucket-btn::after{
+    content:"";
+    position:absolute;top:6px;right:8px;
+    width:5px;height:5px;border-radius:50%;
+    background:var(--amber);
+    opacity:.85;
+  }
+
+  /* ---------- Results list ---------- */
+  .results-wrap{
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:var(--bg-2);
+    overflow:hidden;
+  }
+  .results-head{
+    padding:10px 16px;
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--muted);
+    border-bottom:1px solid var(--line);
+    display:flex;
+    justify-content:space-between;
+  }
+  .results-scroll{
+    max-height:64vh;
+    overflow-y:auto;
+    padding:14px;
+    display:grid;
+    gap:12px;
+  }
+  .results-scroll::-webkit-scrollbar{width:8px;}
+  .results-scroll::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px;}
+
+  .card{
+    display:grid;
+    grid-template-columns:96px 1fr;
+    gap:14px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:12px;
+  }
+  .kanji-cell{
+    position:relative;
+    background:
+      linear-gradient(var(--paper-line) 1px, transparent 1px) 0 0/100% 33.4%,
+      linear-gradient(90deg, var(--paper-line) 1px, transparent 1px) 0 0/33.4% 100%,
+      var(--paper);
+    background-repeat:no-repeat;
+    border-radius:6px;
+    aspect-ratio:1/1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,0.06);
+  }
+  .kanji-cell .kj{
+    font-family:var(--serif);
+    font-weight:700;
+    font-size:clamp(22px,4.4vw,30px);
+    color:var(--paper-ink);
+    line-height:1;
+  }
+  .stroke-badge{
+    position:absolute;
+    top:-8px;right:-8px;
+    background:var(--bg);
+    border:1px solid var(--amber);
+    color:var(--amber);
+    font-family:var(--mono);
+    font-size:10px;
+    font-weight:700;
+    padding:2px 5px;
+    border-radius:6px;
+    box-shadow:0 0 0 3px var(--bg-2);
+  }
+  .card-body{min-width:0;}
+  .yomi{
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--teal);
+    letter-spacing:.04em;
+  }
+  .ja-text{
+    font-size:13.5px;
+    line-height:1.75;
+    margin:6px 0 6px;
+    color:var(--ink);
+  }
+  .en-text{
+    font-size:12.5px;
+    line-height:1.6;
+    color:var(--muted);
+    border-top:1px dashed var(--line);
+    padding-top:6px;
+  }
+  .empty-note{
+    padding:26px 14px;
+    text-align:center;
+    color:var(--muted);
+    font-family:var(--mono);
+    font-size:13px;
+  }
+
+  footer{
+    max-width:980px;margin:0 auto;padding:10px 20px 40px;
+    color:var(--muted);font-family:var(--mono);font-size:11px;
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;
+  }
+
+  @media (max-width:520px){
+    .card{grid-template-columns:76px 1fr;}
+    .tabs{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">DX学科 &nbsp;/&nbsp; IT Passport Kanji Reference</div>
+  <h1>IT<span class="kanji-accent">パスポート</span>漢字用語辞典</h1>
+  <p class="lede">留学生のための、ITパスポート試験の漢字用語集です。画数、または読み方(ひらがな)から絞り込んで探せます。</p>
+  <div class="stat-strip">
+    <div class="stat"><span class="dot"></span>収録語数 <b id="stat-total">-</b> 語</div>
+    <div class="stat"><span class="dot" style="background:var(--amber)"></span>画数 <b id="stat-strokes">-</b> 画〜<b id="stat-strokes-max">-</b> 画</div>
+  </div>
+</header>
+
+<div class="shell">
+
+  <div class="tabs">
+    <button class="tab active" id="tab-strokes" onclick="setMode('strokes')">
+      画数で探す
+      <span class="sub">STROKE COUNT / 十の位で絞り込み</span>
+    </button>
+    <button class="tab" id="tab-yomi" onclick="setMode('yomi')">
+      よみで探す
+      <span class="sub">READING / ひらがな1〜2文字目</span>
+    </button>
+  </div>
+
+  <div class="crumbbar">
+    <div class="crumbs" id="crumbs"></div>
+    <button class="backbtn" id="backbtn" onclick="goBack()" style="display:none;">← 戻る</button>
+  </div>
+
+  <div id="picker" class="grid-buttons"></div>
+
+  <div id="results-panel" class="results-wrap" style="display:none;">
+    <div class="results-head">
+      <span id="results-label">検索結果</span>
+      <span id="results-count"></span>
+    </div>
+    <div class="results-scroll" id="results-scroll"></div>
+  </div>
+
+</div>
+
+<footer>
+  <span>ITパスポート 漢字用語辞典 — DX学科教材</span>
+  <span>Static site · GitHub Pages</span>
+</footer>
+
+<script>
+const DATA = [{"kanji": "改ざん", "yomi": "かいざん", "strokes": 7, "ja": "データや文書(ぶんしょ)を、悪(わる)い目的(もくてき)で勝手(かって)に書(か)き換(か)えること。", "en": "Tampering — illegally altering data or documents."}, {"kanji": "人材", "yomi": "じんざい", "strokes": 9, "ja": "会社(かいしゃ)で働(はたら)く人(ひと)のこと。", "en": "Human resources / talent."}, {"kanji": "会計", "yomi": "かいけい", "strokes": 15, "ja": "お金(かね)の出(で)入(い)りを計算(けいさん)すること。", "en": "Accounting."}, {"kanji": "保守", "yomi": "ほしゅ", "strokes": 15, "ja": "機械(きかい)やシステムを正常(せいじょう)に動(うご)くように守(まも)ること。", "en": "Maintenance."}, {"kanji": "工程", "yomi": "こうてい", "strokes": 15, "ja": "仕事(しごと)を進(すす)める順番(じゅんばん)や段階(だんかい)。", "en": "Process (production steps)."}, {"kanji": "検収", "yomi": "けんしゅう", "strokes": 15, "ja": "納品(のうひん)された物(もの)が注文(ちゅうもん)通(どお)りか確認(かくにん)すること。", "en": "Acceptance inspection of delivered goods."}, {"kanji": "在庫", "yomi": "ざいこ", "strokes": 16, "ja": "まだ売(う)っていない品物(しなもの)。", "en": "Inventory / stock."}, {"kanji": "受注", "yomi": "じゅちゅう", "strokes": 16, "ja": "お客(きゃく)さんから注文(ちゅうもん)を受(う)けること。", "en": "Receiving an order."}, {"kanji": "冗長化", "yomi": "じょうちょうか", "strokes": 16, "ja": "同(おな)じ機械(きかい)を二(ふた)つ以上(いじょう)用意(ようい)し、故障(こしょう)しても止(と)まらないようにすること。", "en": "Redundancy (backup systems for continuity)."}, {"kanji": "発注", "yomi": "はっちゅう", "strokes": 17, "ja": "品物(しなもの)を注文(ちゅうもん)すること。", "en": "Placing an order."}, {"kanji": "復号", "yomi": "ふくごう", "strokes": 17, "ja": "暗号(あんごう)をもとの形(かたち)に戻(もど)すこと。", "en": "Decryption."}, {"kanji": "運用", "yomi": "うんよう", "strokes": 17, "ja": "システムを実際(じっさい)に動(うご)かして使(つか)うこと。", "en": "Operation."}, {"kanji": "予算", "yomi": "よさん", "strokes": 18, "ja": "使(つか)えるお金(かね)の計画(けいかく)。", "en": "Budget."}, {"kanji": "契約", "yomi": "けいやく", "strokes": 18, "ja": "約束(やくそく)を紙(かみ)に書(か)くこと。", "en": "Contract."}, {"kanji": "可用性", "yomi": "かようせい", "strokes": 18, "ja": "システムが止(と)まらずいつでも使(つか)える性質(せいしつ)。", "en": "Availability."}, {"kanji": "教育", "yomi": "きょういく", "strokes": 19, "ja": "知識(ちしき)や技術(ぎじゅつ)を教(おし)えること。", "en": "Education."}, {"kanji": "研修", "yomi": "けんしゅう", "strokes": 19, "ja": "仕事(しごと)のために勉強(べんきょう)する期間(きかん)。", "en": "Training."}, {"kanji": "端末", "yomi": "たんまつ", "strokes": 19, "ja": "システムに接続(せつぞく)する機械(きかい)。", "en": "Terminal (device)."}, {"kanji": "削除", "yomi": "さくじょ", "strokes": 19, "ja": "データや文字(もじ)を消(け)すこと。", "en": "Deletion."}, {"kanji": "納品", "yomi": "のうひん", "strokes": 19, "ja": "注文(ちゅうもん)された物(もの)を届(とど)けること。", "en": "Delivery of goods."}, {"kanji": "供給", "yomi": "きょうきゅう", "strokes": 20, "ja": "必要(ひつよう)な物(もの)を市場(しじょう)に送(おく)ること。", "en": "Supply."}, {"kanji": "設計", "yomi": "せっけい", "strokes": 20, "ja": "作(つく)る前(まえ)に計画(けいかく)を立(た)てること。", "en": "Design."}, {"kanji": "利用者", "yomi": "りようしゃ", "strokes": 20, "ja": "システムを使(つか)う人(ひと)。", "en": "User."}, {"kanji": "更新", "yomi": "こうしん", "strokes": 20, "ja": "古(ふる)い情報(じょうほう)を新(あたら)しくすること。", "en": "Update."}, {"kanji": "踏み台", "yomi": "ふみだい", "strokes": 20, "ja": "攻撃者(こうげきしゃ)が他(ほか)を攻撃(こうげき)するために利用(りよう)する乗(の)っ取(と)られたコンピューター。", "en": "Compromised host used as an attack relay."}, {"kanji": "正規化", "yomi": "せいきか", "strokes": 20, "ja": "データベースの表(ひょう)を無駄(むだ)なく整理(せいり)すること。", "en": "Normalization (databases)."}, {"kanji": "規格", "yomi": "きかく", "strokes": 21, "ja": "みんなで決(き)めた物(もの)の形(かたち)などのルール。", "en": "Standard / specification."}, {"kanji": "開発", "yomi": "かいはつ", "strokes": 21, "ja": "新(あたら)しい製品(せいひん)やシステムを作(つく)ること。", "en": "Development."}, {"kanji": "自動化", "yomi": "じどうか", "strokes": 21, "ja": "人(ひと)の作業(さぎょう)を機械(きかい)がするようにすること。", "en": "Automation."}, {"kanji": "有線", "yomi": "ゆうせん", "strokes": 21, "ja": "電線(でんせん)を使(つか)って通信(つうしん)すること。", "en": "Wired connection."}, {"kanji": "回線", "yomi": "かいせん", "strokes": 21, "ja": "通信(つうしん)の道(みち)。", "en": "Line / circuit."}, {"kanji": "変換", "yomi": "へんかん", "strokes": 21, "ja": "形(かたち)や種類(しゅるい)を変(か)えること。", "en": "Conversion."}, {"kanji": "検索", "yomi": "けんさく", "strokes": 21, "ja": "必要(ひつよう)な情報(じょうほう)を探(さが)すこと。", "en": "Search."}, {"kanji": "二進法", "yomi": "にしんほう", "strokes": 21, "ja": "0と1で数(かず)を表(あらわ)す方法(ほうほう)。", "en": "Binary system."}, {"kanji": "十進法", "yomi": "じっしんほう", "strokes": 21, "ja": "0から9で数(かず)を表(あらわ)す方法(ほうほう)。", "en": "Decimal system."}, {"kanji": "完全性", "yomi": "かんぜんせい", "strokes": 21, "ja": "データが正(ただ)しく書(か)き換(か)えられていない性質(せいしつ)。", "en": "Integrity (of data)."}, {"kanji": "差別化", "yomi": "さべつか", "strokes": 21, "ja": "自分(じぶん)の商品(しょうひん)を他(ほか)と違(ちが)うものにすること。", "en": "Differentiation."}, {"kanji": "待ち行列", "yomi": "まちぎょうれつ", "strokes": 21, "ja": "処理(しょり)を待(ま)っているデータや人(ひと)の列(れつ)。", "en": "Queue."}, {"kanji": "暗号化", "yomi": "あんごうか", "strokes": 22, "ja": "情報(じょうほう)を読(よ)めない形(かたち)に変(か)えること。", "en": "Encryption."}, {"kanji": "圧縮", "yomi": "あっしゅく", "strokes": 22, "ja": "データの大(おお)きさを小(ちい)さくすること。", "en": "Compression."}, {"kanji": "需要", "yomi": "じゅよう", "strokes": 23, "ja": "物(もの)を買(か)いたいという量(りょう)。", "en": "Demand."}, {"kanji": "故障", "yomi": "こしょう", "strokes": 23, "ja": "機械(きかい)が正常(せいじょう)に動(うご)かなくなること。", "en": "Breakdown."}, {"kanji": "効率化", "yomi": "こうりつか", "strokes": 23, "ja": "少(すく)ない力(ちから)で多(おお)くの結果(けっか)を出(だ)せるようにすること。", "en": "Making something more efficient."}, {"kanji": "仮想化", "yomi": "かそうか", "strokes": 23, "ja": "一(ひと)つの機械(きかい)を何台(なんだい)もあるように使(つか)う技術(ぎじゅつ)。", "en": "Virtualization."}, {"kanji": "真正性", "yomi": "しんせいせい", "strokes": 23, "ja": "情報(じょうほう)や人物(じんぶつ)が本物(ほんもの)であるという性質(せいしつ)。", "en": "Authenticity."}, {"kanji": "正常系", "yomi": "せいじょうけい", "strokes": 23, "ja": "システムが正(ただ)しく動(うご)くときの流(なが)れ。", "en": "Normal (success) processing path."}, {"kanji": "検証", "yomi": "けんしょう", "strokes": 23, "ja": "正(ただ)しいか実際(じっさい)に確(たし)かめること。", "en": "Verification."}, {"kanji": "保守性", "yomi": "ほしゅせい", "strokes": 23, "ja": "システムを直(なお)しやすい性質(せいしつ)。", "en": "Maintainability."}, {"kanji": "監査", "yomi": "かんさ", "strokes": 24, "ja": "記録(きろく)が正(ただ)しいか確認(かくにん)すること。", "en": "Audit."}, {"kanji": "生産性", "yomi": "せいさんせい", "strokes": 24, "ja": "少(すく)ない時間(じかん)でどれくらい作(つく)れるかという力(ちから)。", "en": "Productivity."}, {"kanji": "権限", "yomi": "けんげん", "strokes": 24, "ja": "決(き)められた力(ちから)や範囲(はんい)。", "en": "Authority / permission."}, {"kanji": "障害", "yomi": "しょうがい", "strokes": 24, "ja": "システムが正常(せいじょう)に動(うご)かなくなる問題(もんだい)。", "en": "Failure / trouble."}, {"kanji": "業務", "yomi": "ぎょうむ", "strokes": 24, "ja": "会社(かいしゃ)で行(おこな)う仕事(しごと)。", "en": "Business tasks."}, {"kanji": "多重度", "yomi": "たじゅうど", "strokes": 24, "ja": "二(ふた)つの表(ひょう)がどのくらいの数(かず)で結(むす)びついているかを表(あらわ)す値(あたい)。", "en": "Multiplicity/cardinality (databases)."}, {"kanji": "下請法", "yomi": "したうけほう", "strokes": 26, "ja": "大(おお)きい会社(かいしゃ)が小(ちい)さい会社(かいしゃ)に無理(むり)な条件(じょうけん)を出(だ)さないよう守(まも)る法律(ほうりつ)。", "en": "Subcontract Act."}, {"kanji": "認証", "yomi": "にんしょう", "strokes": 26, "ja": "本人(ほんにん)かどうか確認(かくにん)すること。", "en": "Authentication."}, {"kanji": "半導体", "yomi": "はんどうたい", "strokes": 27, "ja": "電気(でんき)を少(すこ)し通(とお)すコンピューター部品(ぶひん)の材料(ざいりょう)。", "en": "Semiconductor."}, {"kanji": "無線", "yomi": "むせん", "strokes": 27, "ja": "電線(でんせん)を使(つか)わない通信(つうしん)。", "en": "Wireless."}, {"kanji": "盗聴", "yomi": "とうちょう", "strokes": 28, "ja": "他(ほか)の人(ひと)の通信(つうしん)をこっそり見(み)聞(き)きすること。", "en": "Eavesdropping."}, {"kanji": "脆弱性", "yomi": "ぜいじゃくせい", "strokes": 28, "ja": "システムの攻撃(こうげき)されやすい弱(よわ)い部分(ぶぶん)。", "en": "Vulnerability."}, {"kanji": "複製", "yomi": "ふくせい", "strokes": 28, "ja": "同(おな)じ物(もの)をもう一(ひと)つ作(つく)ること。", "en": "Copy / duplicate."}, {"kanji": "仕様書", "yomi": "しようしょ", "strokes": 29, "ja": "システムの内容(ないよう)を詳(くわ)しく書(か)いた書類(しょるい)。", "en": "Specification document."}, {"kanji": "組織", "yomi": "そしき", "strokes": 29, "ja": "目的(もくてき)のために集(あつ)まった人(ひと)のグループ。", "en": "Organization."}, {"kanji": "入力装置", "yomi": "にゅうりょくそうち", "strokes": 29, "ja": "コンピューターに情報(じょうほう)を入(い)れる機械(きかい)。", "en": "Input device."}, {"kanji": "異常系", "yomi": "いじょうけい", "strokes": 29, "ja": "エラーが起(お)きたときの流(なが)れ。", "en": "Exception (error) processing path."}, {"kanji": "顧客", "yomi": "こきゃく", "strokes": 30, "ja": "商品(しょうひん)を買(か)ってくれる人(ひと)。", "en": "Customer."}, {"kanji": "並列処理", "yomi": "へいれつしょり", "strokes": 30, "ja": "いくつかの処理(しょり)を同時(どうじ)に行(おこな)うこと。", "en": "Parallel processing."}, {"kanji": "侵入検知", "yomi": "しんにゅうけんち", "strokes": 30, "ja": "システムへの不正(ふせい)なアクセスを早(はや)く見(み)つけること。", "en": "Intrusion detection."}, {"kanji": "移植性", "yomi": "いしょくせい", "strokes": 31, "ja": "プログラムを他(ほか)の環境(かんきょう)でも使(つか)いやすい性質(せいしつ)。", "en": "Portability."}, {"kanji": "標準化", "yomi": "ひょうじゅんか", "strokes": 32, "ja": "同(おな)じやり方(かた)を使(つか)うよう決(き)めること。", "en": "Standardization."}, {"kanji": "出力装置", "yomi": "しゅつりょくそうち", "strokes": 32, "ja": "コンピューターの結果(けっか)を外(そと)に出(だ)す機械(きかい)。", "en": "Output device."}, {"kanji": "分散処理", "yomi": "ぶんさんしょり", "strokes": 32, "ja": "一(ひと)つの仕事(しごと)を複数(ふくすう)のコンピューターに分(わ)けて行(おこな)うこと。", "en": "Distributed processing."}, {"kanji": "公開鍵", "yomi": "こうかいかぎ", "strokes": 33, "ja": "暗号化(あんごうか)のため誰(だれ)にでも公開(こうかい)する鍵(かぎ)。", "en": "Public key."}, {"kanji": "共通鍵", "yomi": "きょうつうかぎ", "strokes": 33, "ja": "暗号化(あんごうか)と復号(ふくごう)の両方(りょうほう)で同(おな)じ鍵(かぎ)を使(つか)う方式(ほうしき)。", "en": "Common (shared) key."}, {"kanji": "見積書", "yomi": "みつもりしょ", "strokes": 33, "ja": "仕事(しごと)の費用(ひよう)を前(まえ)もって計算(けいさん)した書類(しょるい)。", "en": "Quotation."}, {"kanji": "信頼性", "yomi": "しんらいせい", "strokes": 33, "ja": "故障(こしょう)せず安定(あんてい)して動(うご)く性質(せいしつ)。", "en": "Reliability."}, {"kanji": "著作権", "yomi": "ちょさくけん", "strokes": 33, "ja": "本(ほん)や音楽(おんがく)を作(つく)った人(ひと)が持(も)つ権利(けんり)。", "en": "Copyright."}, {"kanji": "管理者", "yomi": "かんりしゃ", "strokes": 33, "ja": "システムを管理(かんり)する責任(せきにん)を持(も)つ人(ひと)。", "en": "Administrator."}, {"kanji": "災害復旧", "yomi": "さいがいふっきゅう", "strokes": 34, "ja": "災害(さいがい)の後(あと)、システムをもとに戻(もど)すこと。", "en": "Disaster recovery."}, {"kanji": "個人情報", "yomi": "こじんじょうほう", "strokes": 35, "ja": "名前(なまえ)や住所(じゅうしょ)など個人(こじん)に関(かん)する情報(じょうほう)。", "en": "Personal information."}, {"kanji": "内部統制", "yomi": "ないぶとうせい", "strokes": 35, "ja": "不正(ふせい)やミスを防(ふせ)ぐための会社(かいしゃ)の仕組(しく)み。", "en": "Internal control."}, {"kanji": "電子署名", "yomi": "でんししょめい", "strokes": 35, "ja": "インターネット上(じょう)で本人(ほんにん)の文書(ぶんしょ)だと証明(しょうめい)する仕組(しく)み。", "en": "Digital signature."}, {"kanji": "機密性", "yomi": "きみつせい", "strokes": 35, "ja": "許可(きょか)された人(ひと)だけが情報(じょうほう)を見(み)られる性質(せいしつ)。", "en": "Confidentiality."}, {"kanji": "負荷分散", "yomi": "ふかぶんさん", "strokes": 35, "ja": "アクセスの負担(ふたん)を複数(ふくすう)のサーバーに分(わ)けること。", "en": "Load balancing."}, {"kanji": "内部設計", "yomi": "ないぶせっけい", "strokes": 35, "ja": "システムの中(なか)の具体的(ぐたいてき)な作(つく)り方(かた)を決(き)める設計(せっけい)。", "en": "Internal (detailed) design."}, {"kanji": "特許権", "yomi": "とっきょけん", "strokes": 36, "ja": "新(あたら)しい発明(はつめい)をした人(ひと)が持(も)つ権利(けんり)。", "en": "Patent right."}, {"kanji": "要件定義", "yomi": "ようけんていぎ", "strokes": 36, "ja": "システムに必要(ひつよう)な機能(きのう)を決(き)めること。", "en": "Requirements definition."}, {"kanji": "排他制御", "yomi": "はいたせいぎょ", "strokes": 36, "ja": "同(おな)じデータを複数(ふくすう)の処理(しょり)が同時(どうじ)に使(つか)えないようにすること。", "en": "Exclusive control."}, {"kanji": "外部設計", "yomi": "がいぶせっけい", "strokes": 36, "ja": "利用者(りようしゃ)から見(み)える部分(ぶぶん)を決(き)める設計(せっけい)。", "en": "External (basic) design."}, {"kanji": "業務分析", "yomi": "ぎょうむぶんせき", "strokes": 36, "ja": "仕事(しごと)の内容(ないよう)や流(なが)れを詳(くわ)しく調(しら)べること。", "en": "Business analysis."}, {"kanji": "情報漏えい", "yomi": "じょうほうろうえい", "strokes": 37, "ja": "秘密(ひみつ)の情報(じょうほう)が外(そと)に出(で)てしまうこと。", "en": "Information leak."}, {"kanji": "意思決定", "yomi": "いしけってい", "strokes": 37, "ja": "何(なに)かをどうするか自分(じぶん)で決(き)めること。", "en": "Decision making."}, {"kanji": "生体認証", "yomi": "せいたいにんしょう", "strokes": 38, "ja": "指紋(しもん)や顔(かお)など体(からだ)の特徴(とくちょう)で本人(ほんにん)を確認(かくにん)すること。", "en": "Biometric authentication."}, {"kanji": "秘密鍵", "yomi": "ひみつかぎ", "strokes": 38, "ja": "自分(じぶん)だけが持(も)ち他(ほか)に見(み)せない鍵(かぎ)。", "en": "Private key."}, {"kanji": "障害対応", "yomi": "しょうがいたいおう", "strokes": 38, "ja": "システムの問題(もんだい)が起(お)きたとき対処(たいしょ)すること。", "en": "Incident response."}, {"kanji": "電子商取引", "yomi": "でんししょうとりひき", "strokes": 39, "ja": "インターネットで物(もの)を売買(ばいばい)すること。", "en": "E-commerce."}, {"kanji": "独占禁止法", "yomi": "どくせんきんしほう", "strokes": 39, "ja": "一社(いっしゃ)が市場(しじょう)を独(ひと)り占(じ)めしないよう守(まも)る法律(ほうりつ)。", "en": "Antimonopoly Act."}, {"kanji": "物理設計", "yomi": "ぶつりせっけい", "strokes": 39, "ja": "データベースを実際(じっさい)のコンピューターにどう配置(はいち)するか決(き)める設計(せっけい)。", "en": "Physical design (databases)."}, {"kanji": "需要予測", "yomi": "じゅようよそく", "strokes": 39, "ja": "これからどれくらい物(もの)が売(う)れるか予想(よそう)すること。", "en": "Demand forecasting."}, {"kanji": "多層防御", "yomi": "たそうぼうぎょ", "strokes": 39, "ja": "セキュリティを何段階(なんだんかい)も重(かさ)ねて守(まも)る考(かんが)え方(かた)。", "en": "Defense in depth."}, {"kanji": "派遣契約", "yomi": "はけんけいやく", "strokes": 40, "ja": "派遣会社(はけんがいしゃ)の社員(しゃいん)が他社(たしゃ)で働(はたら)く契約(けいやく)。", "en": "Temporary staffing contract."}, {"kanji": "守秘義務", "yomi": "しゅひぎむ", "strokes": 40, "ja": "仕事(しごと)で知(し)った秘密(ひみつ)を話(はな)してはいけない義務(ぎむ)。", "en": "Confidentiality obligation."}, {"kanji": "商標権", "yomi": "しょうひょうけん", "strokes": 41, "ja": "会社(かいしゃ)のマークや名前(なまえ)を守(まも)る権利(けんり)。", "en": "Trademark right."}, {"kanji": "請負契約", "yomi": "うけおいけいやく", "strokes": 42, "ja": "仕事(しごと)の完成(かんせい)を約束(やくそく)する契約(けいやく)。", "en": "Contract for work (result-based)."}, {"kanji": "総当たり攻撃", "yomi": "そうあたりこうげき", "strokes": 42, "ja": "考(かんが)えられる組(く)み合(あ)わせを全部(ぜんぶ)試(ため)してパスワードを破(やぶ)ろうとする攻撃(こうげき)。", "en": "Brute-force attack."}, {"kanji": "損益分岐点", "yomi": "そんえきぶんきてん", "strokes": 43, "ja": "利益(りえき)も損(そん)もない売上(うりあげ)の金額(きんがく)。", "en": "Break-even point."}, {"kanji": "業務改善", "yomi": "ぎょうむかいぜん", "strokes": 43, "ja": "仕事(しごと)のやり方(かた)をより良(よ)くすること。", "en": "Business (process) improvement."}, {"kanji": "制御装置", "yomi": "せいぎょそうち", "strokes": 45, "ja": "他(ほか)の装置(そうち)に命令(めいれい)を出(だ)すコンピューターの部分(ぶぶん)。", "en": "Control unit."}, {"kanji": "準委任契約", "yomi": "じゅんいにんけいやく", "strokes": 45, "ja": "仕事(しごと)の完成(かんせい)でなく作業(さぎょう)自体(じたい)を頼(たの)む契約(けいやく)。", "en": "Quasi-mandate contract (effort-based)."}, {"kanji": "辞書攻撃", "yomi": "じしょこうげき", "strokes": 45, "ja": "よく使(つか)われる言葉(ことば)を集(あつ)めてパスワードを破(やぶ)ろうとする攻撃(こうげき)。", "en": "Dictionary attack."}, {"kanji": "進捗管理", "yomi": "しんちょくかんり", "strokes": 46, "ja": "仕事(しごと)の進(すす)み具合(ぐあい)を確認(かくにん)しながら管理(かんり)すること。", "en": "Progress management."}, {"kanji": "論理設計", "yomi": "ろんりせっけい", "strokes": 46, "ja": "データベースの表(ひょう)を考(かんが)え方(かた)として整理(せいり)する設計(せっけい)。", "en": "Logical design (databases)."}, {"kanji": "職務発明", "yomi": "しょくむはつめい", "strokes": 46, "ja": "会社員(かいしゃいん)が仕事(しごと)の中(なか)で行(おこな)った発明(はつめい)。", "en": "Employee invention."}, {"kanji": "集積回路", "yomi": "しゅうせきかいろ", "strokes": 47, "ja": "小(ちい)さい板(いた)にたくさんの部品(ぶひん)をまとめた電子部品(でんしぶひん)。ICとも言(い)う。", "en": "Integrated circuit (IC)."}, {"kanji": "責任追跡性", "yomi": "せきにんついせきせい", "strokes": 47, "ja": "誰(だれ)がその操作(そうさ)をしたか後(あと)で確認(かくにん)できる性質(せいしつ)。", "en": "Accountability."}, {"kanji": "経営戦略", "yomi": "けいえいせんりゃく", "strokes": 47, "ja": "会社(かいしゃ)が目標(もくひょう)を達成(たっせい)するための長(なが)い計画(けいかく)。", "en": "Business strategy."}, {"kanji": "品質管理", "yomi": "ひんしつかんり", "strokes": 49, "ja": "製品(せいひん)の質(しつ)が良(よ)いか確認(かくにん)し続(つづ)けること。", "en": "Quality control."}, {"kanji": "経営資源", "yomi": "けいえいしげん", "strokes": 49, "ja": "会社(かいしゃ)を動(うご)かす人(ひと)・物(もの)・お金(かね)・情報(じょうほう)。", "en": "Management resources."}, {"kanji": "競争優位", "yomi": "きょうそうゆうい", "strokes": 50, "ja": "他社(たしゃ)より有利(ゆうり)な立場(たちば)にあること。", "en": "Competitive advantage."}, {"kanji": "妥当性確認", "yomi": "だとうせいかくにん", "strokes": 50, "ja": "作(つく)ったシステムが本当(ほんとう)に必要(ひつよう)なものか確(たし)かめること。", "en": "Validation."}, {"kanji": "中央処理装置", "yomi": "ちゅうおうしょりそうち", "strokes": 50, "ja": "コンピューターの中心(ちゅうしん)で計算(けいさん)をする部分(ぶぶん)。CPUのこと。", "en": "Central Processing Unit (CPU)."}, {"kanji": "記憶装置", "yomi": "きおくそうち", "strokes": 51, "ja": "データやプログラムを覚(おぼ)えておく機械(きかい)。", "en": "Storage device."}, {"kanji": "多要素認証", "yomi": "たようそにんしょう", "strokes": 51, "ja": "パスワードと指紋(しもん)など二(ふた)つ以上(いじょう)の方法(ほうほう)で本人(ほんにん)を確認(かくにん)すること。", "en": "Multi-factor authentication."}, {"kanji": "知的財産権", "yomi": "ちてきざいさんけん", "strokes": 52, "ja": "発明(はつめい)やデザインなど人(ひと)の考(かんが)えを守(まも)る権利(けんり)。", "en": "Intellectual property right."}, {"kanji": "労働基準法", "yomi": "ろうどうきじゅんほう", "strokes": 52, "ja": "労働時間(ろうどうじかん)や休(やす)みなど働(はたら)く人(ひと)を守(まも)る法律(ほうりつ)。", "en": "Labor Standards Act."}, {"kanji": "演算装置", "yomi": "えんざんそうち", "strokes": 53, "ja": "コンピューターの中(なか)で計算(けいさん)を行(おこな)う部分(ぶぶん)。", "en": "Arithmetic unit."}, {"kanji": "標的型攻撃", "yomi": "ひょうてきがたこうげき", "strokes": 54, "ja": "特定(とくてい)の会社(かいしゃ)や人(ひと)を狙(ねら)って行(おこな)う攻撃(こうげき)。", "en": "Targeted attack."}, {"kanji": "不正競争防止法", "yomi": "ふせいきょうそうぼうしほう", "strokes": 54, "ja": "会社同士(かいしゃどうし)のずるい競争(きょうそう)を防(ふせ)ぐ法律(ほうりつ)。", "en": "Unfair Competition Prevention Act."}, {"kanji": "論理演算", "yomi": "ろんりえんざん", "strokes": 54, "ja": "「正(ただ)しい」「正(ただ)しくない」で答(こた)えを出(だ)す計算(けいさん)。", "en": "Logical operation."}, {"kanji": "主記憶装置", "yomi": "しゅきおくそうち", "strokes": 56, "ja": "今(いま)使(つか)っているデータを覚(おぼ)えておく中心(ちゅうしん)の記憶装置(きおくそうち)。", "en": "Main memory."}, {"kanji": "製造物責任法", "yomi": "せいぞうぶつせきにんほう", "strokes": 57, "ja": "欠陥(けっかん)のある製品(せいひん)による被害(ひがい)の責任(せきにん)を定(さだ)めた法律(ほうりつ)。PL法(ほう)。", "en": "Product Liability Act."}, {"kanji": "産業財産権", "yomi": "さんぎょうざいさんけん", "strokes": 60, "ja": "特許権(とっきょけん)や商標権(しょうひょうけん)など産業(さんぎょう)に関(かん)する権利(けんり)。", "en": "Industrial property rights."}, {"kanji": "事業継続計画", "yomi": "じぎょうけいぞくけいかく", "strokes": 64, "ja": "災害(さいがい)などがあっても仕事(しごと)を止(と)めないための計画(けいかく)。BCP。", "en": "Business Continuity Plan (BCP)."}, {"kanji": "補助記憶装置", "yomi": "ほじょきおくそうち", "strokes": 70, "ja": "ハードディスクなどデータを長(なが)い間(あいだ)保存(ほぞん)する装置(そうち)。", "en": "Auxiliary/secondary storage."}, {"kanji": "個人情報保護法", "yomi": "こじんじょうほうほごほう", "strokes": 72, "ja": "個人情報(こじんじょうほう)を正(ただ)しく安全(あんぜん)に扱(あつか)うことを定(さだ)めた法律(ほうりつ)。", "en": "Act on the Protection of Personal Information."}];
+
+const GOJUON = "あいうえおかきくけこがぎぐげごさしすせそざじずぜぞたちつてとだぢづでどなにぬねのはひふへほばびぶべぼぱぴぷぺぽまみむめもやゆよらりるれろわをん".split('');
+const SMALL_YOUON = {"ゃ":1,"ゅ":2,"ょ":3};
+
+function toMorae(yomi){
+  const chars = Array.from(yomi);
+  const morae = [];
+  for(let i=0;i<chars.length;i++){
+    const c = chars[i];
+    if(SMALL_YOUON.hasOwnProperty(c) && morae.length>0){
+      morae[morae.length-1] += c;
+    } else {
+      morae.push(c);
+    }
+  }
+  return morae;
+}
+
+function moraSortKey(m){
+  const base = m[0];
+  const idx = GOJUON.indexOf(base);
+  const small = m.length>1 ? (SMALL_YOUON[m[1]]||0) : 0;
+  return (idx<0?999:idx)*10 + small;
+}
+
+// Precompute morae for each record
+DATA.forEach(d=>{ d._morae = toMorae(d.yomi); });
+
+let state = {
+  mode:'strokes',      // 'strokes' | 'yomi'
+  strokeBucket:null,   // e.g. 20
+  kanaStep1:null,
+  kanaStep2:null
+};
+
+function setMode(mode){
+  state = {mode, strokeBucket:null, kanaStep1:null, kanaStep2:null};
+  document.getElementById('tab-strokes').classList.toggle('active', mode==='strokes');
+  document.getElementById('tab-yomi').classList.toggle('active', mode==='yomi');
+  render();
+}
+
+function goBack(){
+  if(state.mode==='strokes'){
+    state.strokeBucket = null;
+  } else {
+    if(state.kanaStep2!==null){ state.kanaStep2 = null; }
+    else if(state.kanaStep1!==null){ state.kanaStep1 = null; }
+  }
+  render();
+}
+
+function jumpTo(level){
+  if(state.mode==='strokes'){ state.strokeBucket = null; }
+  else {
+    if(level==='root'){ state.kanaStep1=null; state.kanaStep2=null; }
+    else if(level==='step1'){ state.kanaStep2=null; }
+  }
+  render();
+}
+
+function bucketOf(strokes){ return Math.floor(strokes/10)*10; }
+function bucketLabel(b){ return b===0 ? '1〜9画' : (b+'画代'); }
+
+function render(){
+  const picker = document.getElementById('picker');
+  const resultsPanel = document.getElementById('results-panel');
+  const crumbs = document.getElementById('crumbs');
+  const backbtn = document.getElementById('backbtn');
+  picker.innerHTML='';
+  resultsPanel.style.display='none';
+  crumbs.innerHTML='';
+  backbtn.style.display='none';
+
+  if(state.mode==='strokes'){
+    crumbs.innerHTML = `<span class="seg" onclick="jumpTo('root')">画数で探す</span>` +
+      (state.strokeBucket!==null ? `<span class="sep">/</span><span>${bucketLabel(state.strokeBucket)}</span>` : '');
+
+    if(state.strokeBucket===null){
+      const buckets = {};
+      DATA.forEach(d=>{ const b=bucketOf(d.strokes); buckets[b]=(buckets[b]||0)+1; });
+      Object.keys(buckets).map(Number).sort((a,b)=>a-b).forEach(b=>{
+        const btn = document.createElement('button');
+        btn.className='bucket-btn';
+        btn.innerHTML = `<span class="main">${bucketLabel(b)}</span><span class="count">${buckets[b]}語</span>`;
+        btn.onclick = ()=>{ state.strokeBucket=b; render(); };
+        picker.appendChild(btn);
+      });
+    } else {
+      backbtn.style.display='inline-block';
+      const list = DATA.filter(d=>bucketOf(d.strokes)===state.strokeBucket)
+                        .sort((a,b)=> a.strokes-b.strokes || a.kanji.localeCompare(b.kanji,'ja'));
+      showResults(list, bucketLabel(state.strokeBucket));
+    }
+    return;
+  }
+
+  // yomi mode
+  let crumbHtml = `<span class="seg" onclick="jumpTo('root')">よみで探す</span>`;
+  if(state.kanaStep1!==null) crumbHtml += `<span class="sep">/</span><span class="seg" onclick="jumpTo('step1')">${state.kanaStep1}</span>`;
+  if(state.kanaStep2!==null) crumbHtml += `<span class="sep">/</span><span>${state.kanaStep2}</span>`;
+  crumbs.innerHTML = crumbHtml;
+
+  if(state.kanaStep1===null){
+    const groups = {};
+    DATA.forEach(d=>{ const k=d._morae[0]; groups[k]=(groups[k]||0)+1; });
+    Object.keys(groups).sort((a,b)=>moraSortKey(a)-moraSortKey(b)).forEach(k=>{
+      const btn = document.createElement('button');
+      btn.className='bucket-btn kana';
+      btn.innerHTML = `<span class="main">${k}</span><span class="count">${groups[k]}語</span>`;
+      btn.onclick = ()=>{ state.kanaStep1=k; render(); };
+      picker.appendChild(btn);
+    });
+  } else if(state.kanaStep2===null){
+    backbtn.style.display='inline-block';
+    const subset = DATA.filter(d=>d._morae[0]===state.kanaStep1);
+    const groups = {};
+    subset.forEach(d=>{
+      const k2 = d._morae.length>1 ? d._morae[1] : '(なし)';
+      groups[k2]=(groups[k2]||0)+1;
+    });
+    Object.keys(groups).sort((a,b)=>moraSortKey(a)-moraSortKey(b)).forEach(k=>{
+      const btn = document.createElement('button');
+      btn.className='bucket-btn kana';
+      btn.innerHTML = `<span class="main">${state.kanaStep1}${k==='(なし)'?'':k}</span><span class="count">${groups[k]}語</span>`;
+      btn.onclick = ()=>{ state.kanaStep2=k; render(); };
+      picker.appendChild(btn);
+    });
+  } else {
+    backbtn.style.display='inline-block';
+    const list = DATA.filter(d=>{
+      const m1 = d._morae[0];
+      const m2 = d._morae.length>1 ? d._morae[1] : '(なし)';
+      return m1===state.kanaStep1 && m2===state.kanaStep2;
+    }).sort((a,b)=> a.yomi.localeCompare(b.yomi,'ja'));
+    showResults(list, state.kanaStep1 + (state.kanaStep2==='(なし)'?'':state.kanaStep2));
+  }
+}
+
+function showResults(list, label){
+  const resultsPanel = document.getElementById('results-panel');
+  const scroll = document.getElementById('results-scroll');
+  document.getElementById('results-label').textContent = `「${label}」の検索結果`;
+  document.getElementById('results-count').textContent = `${list.length} 語`;
+  scroll.innerHTML='';
+  if(list.length===0){
+    scroll.innerHTML = `<div class="empty-note">該当する用語がありません</div>`;
+  } else {
+    list.forEach(d=>{
+      const card = document.createElement('div');
+      card.className='card';
+      card.innerHTML = `
+        <div class="kanji-cell">
+          <span class="kj">${d.kanji}</span>
+          <span class="stroke-badge">${d.strokes}画</span>
+        </div>
+        <div class="card-body">
+          <div class="yomi">${d.yomi}</div>
+          <div class="ja-text">${d.ja}</div>
+          <div class="en-text">${d.en}</div>
+        </div>`;
+      scroll.appendChild(card);
+    });
+  }
+  resultsPanel.style.display='block';
+}
+
+document.getElementById('stat-total').textContent = DATA.length;
+document.getElementById('stat-strokes').textContent = Math.min(...DATA.map(d=>d.strokes));
+document.getElementById('stat-strokes-max').textContent = Math.max(...DATA.map(d=>d.strokes));
+
+render();
+</script>
+</body>
+</html>
